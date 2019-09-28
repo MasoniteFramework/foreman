@@ -10,8 +10,6 @@ class Command:
         for directory in self.get_registered_directories():
             site = directory.split('/')[-2]
             activation_environment = self.find_virtual_environment_activation_file(directory)
-            # print(activation_environment)
-            # return
 
             command = f"cd {directory}"
             command += f" && source {activation_environment}"

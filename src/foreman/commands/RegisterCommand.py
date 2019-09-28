@@ -23,7 +23,6 @@ class RegisterCommand(CLICommand):
 
         configuration = Configuration()
 
-        print('sites', configuration.get('directories'))
         self.info(f'Adding current directory: {directory}')
         configuration.set('directories', [directory])
         self.info('Directory Added Successfully')

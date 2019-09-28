@@ -6,7 +6,6 @@ class DjangoDriver:
         return self.find('wsgi.py', directory)
     
     def detect(self, directory):
-        print('path is', os.path.join(directory, 'manage.py'))
         return os.path.exists(
             os.path.join(directory, 'manage.py')
         )

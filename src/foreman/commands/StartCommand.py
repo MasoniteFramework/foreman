@@ -47,8 +47,6 @@ class StartCommand(CLICommand):
             activation_environment = self.find_virtual_environment_activation_file(directory, site)
 
         driver = self.make(directory)
-        # print(activation_environment)
-        # return
         command = f"cd {directory}"
         command += f" && source {activation_environment}"
         command += f" && pip install uwsgi && set -m; nohup uwsgi --socket /tmp/{site}.test.sock --wsgi-file {driver.wsgi_path(directory)} &> /dev/null &"

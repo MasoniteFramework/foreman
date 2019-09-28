@@ -8,10 +8,7 @@ class Configuration:
 
     def set(self, key, value):
         config = self.config()
-        print('setting value')
         if key in config and isinstance(value, list):
-            print('its a list')
-            # value = set(value)
             if value not in config[key]:
                 config[key] += value
                 config[key] = list(set(config[key]))
@@ -30,7 +27,6 @@ class Configuration:
         if key in config and isinstance(value, list):
             
             for list_value in value:
-                print('looking for ', list_value, 'in', config[key])
                 if list_value in value:
                     config[key].remove(list_value)
             config[key] = list(set(config[key]))
@@ -42,7 +38,6 @@ class Configuration:
             """
             current_dict = self.get(key)
             del current_dict[value]
-            print('current is', current_dict, 'deleting', value)
             config[key] = current_dict
         else:
             pass
