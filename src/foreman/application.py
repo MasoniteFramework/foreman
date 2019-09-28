@@ -14,6 +14,7 @@ from .commands.RegisterCommand import RegisterCommand
 from .commands.UnregisterCommand import UnregisterCommand
 from .commands.VenvCommand import VenvCommand
 from .commands.VenvUnregisterCommand import VenvUnregisterCommand
+from .commands.InstallCommand import InstallCommand
 
 
 application = Application(name="Masonite Foreman")
@@ -21,7 +22,7 @@ application.add(StartCommand())
 application.add(RegisterCommand())
 application.add(UnregisterCommand())
 application.add(VenvCommand())
-application.add(VenvUnregisterCommand())
+application.add(InstallCommand())
 
 if __name__ == '__main__':
     application.run()

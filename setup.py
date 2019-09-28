@@ -14,5 +14,10 @@ setup(
     entry_points={
         'console_scripts': ['foreman=foreman.application:application.run'],
     },
-    # include_package_data=True,
+    include_package_data=True,
+    package_data= {
+        'foreman': [
+            'stubs/*'
+        ]
+    }
 )
