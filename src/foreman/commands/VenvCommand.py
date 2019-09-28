@@ -28,9 +28,9 @@ class VenvCommand(CLICommand):
         if 'VIRTUAL_ENV' in os.environ:
             virtual = os.environ['VIRTUAL_ENV']
             self.info(f'Registering {virtual} for {site}')
-            configuration.set('venv', {'venvs': {
+            configuration.set('venvs', {
                 site: virtual
-            }})
+            })
             self.info("Registered")
         else:
             self.info(f'Could not detect virtualenv path. Ensure you are inside your virtualenv.')

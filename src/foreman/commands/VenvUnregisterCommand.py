@@ -28,9 +28,7 @@ class VenvUnregisterCommand(CLICommand):
         if 'VIRTUAL_ENV' in os.environ:
             virtual = os.environ['VIRTUAL_ENV']
             self.info(f'Unregistering {virtual} for {site}')
-            configuration.remove('venv', {'venvs': {
-                site: virtual
-            }})
+            configuration.remove('venvs', site)
             self.info("Registered")
         else:
             self.info(f'Could not detect virtualenv path')

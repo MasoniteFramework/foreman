@@ -16,11 +16,13 @@ class Configuration:
                 config[key] += value
                 config[key] = list(set(config[key]))
         elif isinstance(value, dict):
-            print('its a dict')
-            config.update(value)
+            if key in config:
+                config[key].update(value)
+            else:
+                config.update({key: value})
         else:
-            print('update the val')
             config.update({key: value})
+
         self.save(config)
     
     def remove(self, key, value):
@@ -32,15 +34,16 @@ class Configuration:
                 if list_value in value:
                     config[key].remove(list_value)
             config[key] = list(set(config[key]))
-        elif isinstance(value, dict):
+        elif isinstance(value, str):
             """
                 {'venvs', {
                     'app1': '/some/path'
                 }}
             """
-            print('value is', value)
-            for dict_key, dict_value in value:
-                print('key', dict_key, 'value', dict_value)
+            current_dict = self.get(key)
+            del current_dict[value]
+            print('current is', current_dict, 'deleting', value)
+            config[key] = current_dict
         else:
             pass
 
