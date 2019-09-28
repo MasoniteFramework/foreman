@@ -2,7 +2,8 @@ import os
 
 class MasoniteDriver:
 
-    def wsgi_path(self):
+    def wsgi_path(self, directory):
+        
         return "wsgi.py"   
     
     def detect(self, directory):

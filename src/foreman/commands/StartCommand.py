@@ -5,6 +5,7 @@ from pathlib import Path
 
 from cleo import Command as CLICommand
 from ..drivers.MasoniteDriver import MasoniteDriver
+from ..drivers.DjangoDriver import DjangoDriver
 from ..services.Configuration import Configuration
 
 class StartCommand(CLICommand):
@@ -16,7 +17,8 @@ class StartCommand(CLICommand):
     """
 
     drivers = {
-        'masonite': MasoniteDriver
+        'masonite': MasoniteDriver,
+        'django': DjangoDriver
     }
 
     def handle(self):
@@ -49,7 +51,7 @@ class StartCommand(CLICommand):
         # return
         command = f"cd {directory}"
         command += f" && source {activation_environment}"
-        command += f" && pip install uwsgi && set -m; nohup uwsgi --socket /tmp/{site}.test.sock --wsgi-file {driver.wsgi_path()} &> /dev/null &"
+        command += f" && pip install uwsgi && set -m; nohup uwsgi --socket /tmp/{site}.test.sock --wsgi-file {driver.wsgi_path(directory)} &> /dev/null &"
         subprocess.run(command, shell=True, close_fds=True,
                         env={'PYTHONPATH': f'{directory}'})
 
