@@ -10,6 +10,10 @@ setup(
         'foreman.drivers',
         'foreman.commands',
     ],
+    install_requires = [
+        "pyyaml",
+        "cleo"
+    ],
     package_dir={'': 'src'},
     entry_points={
         'console_scripts': ['foreman=foreman.application:application.run'],
