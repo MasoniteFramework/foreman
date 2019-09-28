@@ -51,7 +51,9 @@ class InstallCommand(CLICommand):
 
         self.info('Restarting nginx ..')
         subprocess.run("sudo nginx", shell=True)
-        # subprocess.run("sudo nginx -s reload", shell=True)
+        configuration = Configuration()
+        configuration.set('tld', 'test')
+        configuration.set('socket_directory', '/tmp')
 
     def nginx_config_path(self):
         return subprocess.check_output(

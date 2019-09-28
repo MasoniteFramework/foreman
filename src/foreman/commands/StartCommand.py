@@ -41,6 +41,7 @@ class StartCommand(CLICommand):
         configuration = Configuration()
         self.info(f"Starting {site}..")
         venv_config = configuration.get('venvs')
+        tld = configuration.get('tld')
         if site in venv_config:
             activation_environment = venv_config[site]
         else:
@@ -49,7 +50,7 @@ class StartCommand(CLICommand):
         driver = self.make(directory)
         command = f"cd {directory}"
         command += f" && source {activation_environment}"
-        command += f" && pip install uwsgi && set -m; nohup uwsgi --socket /tmp/{site}.test.sock --wsgi-file {driver.wsgi_path(directory)} &> /dev/null &"
+        command += f" && pip install uwsgi && set -m; nohup uwsgi --socket /tmp/{site}.{tld}.sock --wsgi-file {driver.wsgi_path(directory)} &> /dev/null &"
         subprocess.run(command, shell=True, close_fds=True,
                         env={'PYTHONPATH': f'{directory}'})
 

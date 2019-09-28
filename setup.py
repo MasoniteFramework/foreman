@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="masonite-foreman",
-    version='0.0.1',
+    version='0.0.2',
     py_modules=['foreman'],
     packages=[
         'foreman',
