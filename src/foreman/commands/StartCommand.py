@@ -67,7 +67,7 @@ class StartCommand(CLICommand):
 
     def find_virtual_environment_activation_file(self, directory, site):
         for location in Configuration().get('venv_locations'):
-            if location.contains('/'):
+            if "/" in location:
                 project = os.path.basename(directory)
                 venv = os.path.join(location, project, 'bin/activate')
             else:
