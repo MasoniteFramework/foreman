@@ -48,6 +48,9 @@ class StartCommand(CLICommand):
         else:
             activation_environment = self.find_virtual_environment_activation_file(directory, site)
 
+        if activation_environment is None:
+            self.warn(f"No virtual environment detected, not starting site {site}")
+            return
         driver = self.make(directory)
         command = f"cd {directory}"
         command += f" && source {activation_environment}"
@@ -63,7 +66,15 @@ class StartCommand(CLICommand):
         return directories
 
     def find_virtual_environment_activation_file(self, directory, site):
-        return os.path.join(directory, 'venv/bin/activate')
+        for location in Configuration().get('venv_locations'):
+            if location.contains('/'):
+                project = os.path.basename(directory)
+                venv = os.path.join(location, project, 'bin/activate')
+            else:
+                venv = os.path.join(directory, location, 'bin/activate')
+            if os.path.exists(venv):
+                return venv
+        return None
 
     def make(self, directory):
         for key, available_driver in self.drivers.items():
@@ -71,6 +82,6 @@ class StartCommand(CLICommand):
             if selected_driver.detect(directory):
                 self.info(f'Using driver: {key.capitalize()}')
                 return selected_driver
-        
+
         raise ValueError("Could not detect a driver for this project")
         # return self.drivers[driver]()

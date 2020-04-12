@@ -53,6 +53,7 @@ class InstallCommand(CLICommand):
         subprocess.run("sudo nginx", shell=True)
         configuration = Configuration()
         configuration.set('tld', 'test')
+        configuration.set('venv_locations', ['venv', 'env'])
         configuration.set('socket_directory', '/tmp')
 
     def nginx_config_path(self):
@@ -61,6 +62,6 @@ class InstallCommand(CLICommand):
     
     def current_user(self):
         return subprocess.check_output("whoami", shell=True).decode('utf-8').strip()
-    
+
     def get_home_path(self):
         return str(Path.home())
