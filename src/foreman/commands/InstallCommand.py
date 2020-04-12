@@ -25,19 +25,9 @@ class InstallCommand(CLICommand):
 
         self.info('Stopping nginx ..')
         subprocess.run("sudo nginx -s stop", shell=True)
-        with open(os.path.join(PATHS['stubs'], 'nginx.conf')) as f:
-            output = f.read()
-        
+
         self.info('Creating foreman config directory .. ')
         subprocess.run("mkdir -p ~/.foreman", shell=True)
-
-        self.info('Moving NGINX config ..')
-        output = output.replace('FOREMAN_NGINX_CONF', os.path.join(
-            self.get_home_path(), '.foreman/nginx.conf'))
-        output = output.replace('SYSTEM_USER', self.current_user())
-        
-        with open(self.nginx_config_path(), 'w+') as f:
-            f.write(output)
 
         self.info("Moving Foreman config ..")
 
@@ -46,8 +36,14 @@ class InstallCommand(CLICommand):
 
         output = output.replace('TLD', 'test')
 
+        self.info('Creating NGINX config ..')
         with open(os.path.join(self.get_home_path(), '.foreman/nginx.conf'), 'w+') as f:
             f.write(output)
+
+        os.link(
+            os.path.join(self.get_home_path(), '.foreman/nginx.conf'),
+            os.path.join(self.nginx_config_path(), 'servers/foreman.conf')
+        )
 
         self.info('Restarting nginx ..')
         subprocess.run("sudo nginx", shell=True)
@@ -56,9 +52,10 @@ class InstallCommand(CLICommand):
         configuration.set('socket_directory', '/tmp')
 
     def nginx_config_path(self):
-        return subprocess.check_output(
+        nginx_conf = subprocess.check_output(
             "nginx -V 2>&1 | grep -o '\-\-conf-path=\(.*conf\)' | cut -d '=' -f2", shell=True).decode('utf-8').strip()
-    
+        return os.path.dirname(nginx_conf)
+
     def current_user(self):
         return subprocess.check_output("whoami", shell=True).decode('utf-8').strip()
     
