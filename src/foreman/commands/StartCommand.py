@@ -49,7 +49,7 @@ class StartCommand(CLICommand):
             activation_environment = self.find_virtual_environment_activation_file(directory, site)
 
         if activation_environment is None:
-            self.warn(f"No virtual environment detected, not starting site {site}")
+            self.line(f"<error>No virtual environment detected, not starting site {site}</error>")
             return
         driver = self.make(directory)
         command = f"cd {directory}"

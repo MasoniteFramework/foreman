@@ -12,7 +12,7 @@ class Command:
             activation_environment = self.find_virtual_environment_activation_file(directory)
 
             if activation_environment is None:
-                self.warn(f"No virtual environment detected, not starting site {site}")
+                self.line(f"<error>No virtual environment detected, not starting site {site}</error>")
             else:
                 command = f"cd {directory}"
                 command += f" && source {activation_environment}"
