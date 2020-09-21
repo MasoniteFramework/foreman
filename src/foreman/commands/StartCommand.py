@@ -49,7 +49,9 @@ class StartCommand(CLICommand):
             activation_environment = self.find_virtual_environment_activation_file(directory, site)
 
         if activation_environment is None:
-            self.line(f"<error>No virtual environment detected, not starting site {site}</error>")
+            self.line(f"<error>No virtual environment detected, not starting site {site}.</error>")
+            self.line("<error>Please register your venv by running:</error>")
+            self.line("<fg=magenta;options=bold>    foreman register /path/to/venv</>")
             return
         driver = self.make(directory)
         command = f"cd {directory}"

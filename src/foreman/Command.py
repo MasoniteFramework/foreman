@@ -2,6 +2,7 @@ import subprocess
 import os
 import glob
 from pathlib import Path
+from foreman.services import Configuration
 
 
 class Command:
@@ -12,7 +13,9 @@ class Command:
             activation_environment = self.find_virtual_environment_activation_file(directory)
 
             if activation_environment is None:
-                self.line(f"<error>No virtual environment detected, not starting site {site}</error>")
+                self.line(f"<error>No virtual environment detected, not starting site {site}.</error>")
+                self.line("<error>Please register your venv by running:</error>")
+                self.line("<fg=magenta;options=bold>    foreman register /path/to/venv</>")
             else:
                 command = f"cd {directory}"
                 command += f" && source {activation_environment}"
