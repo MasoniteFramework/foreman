@@ -2,7 +2,7 @@ import subprocess
 import os
 import glob
 from pathlib import Path
-from ..services.Configuration import Configuration
+from .services.Configuration import Configuration
 
 
 class Command:
