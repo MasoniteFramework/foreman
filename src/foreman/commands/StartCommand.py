@@ -1,5 +1,6 @@
 import glob
 import os
+import sys
 import subprocess
 from pathlib import Path
 
@@ -43,10 +44,12 @@ class StartCommand(CLICommand):
         venv_config = configuration.get('venvs')
         tld = configuration.get('tld')
         socket_directory = configuration.get('socket_directory')
-        if site in venv_config:
-            activation_environment = os.path.join(venv_config[site], 'bin/activate')
-        else:
-            activation_environment = self.find_virtual_environment_activation_file(directory, site)
+        activation_environment = True
+        if not self.in_virtualenv():
+            if site in venv_config:
+                activation_environment = os.path.join(venv_config[site], 'bin/activate')
+            else:
+                activation_environment = self.find_virtual_environment_activation_file(directory, site)
 
         if activation_environment is None:
             self.line(f"<error>No virtual environment detected, not starting site {site}.</error>")
@@ -55,7 +58,8 @@ class StartCommand(CLICommand):
             return
         driver = self.make(directory)
         command = f"cd {directory}"
-        command += f" && source {activation_environment}"
+        if not self.in_virtualenv():
+            command += f" && source {activation_environment}"
         socket_path = os.path.join(socket_directory, site)
         command += f" && pip install uwsgi && set -m; nohup uwsgi --socket {socket_path}.{tld}.sock --wsgi-file {driver.wsgi_path(directory)} --py-autoreload=1 &> /dev/null &"
         subprocess.run(command, shell=True, close_fds=True,
@@ -87,3 +91,6 @@ class StartCommand(CLICommand):
 
         raise ValueError("Could not detect a driver for this project")
         # return self.drivers[driver]()
+
+    def in_virtualenv(self):
+        return os.getenv('VIRTUAL_ENV') is not None
