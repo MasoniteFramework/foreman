@@ -44,12 +44,7 @@ class StartCommand(CLICommand):
         venv_config = configuration.get('venvs')
         tld = configuration.get('tld')
         socket_directory = configuration.get('socket_directory')
-        activation_environment = True
-        if not self.in_virtualenv():
-            if site in venv_config:
-                activation_environment = os.path.join(venv_config[site], 'bin/activate')
-            else:
-                activation_environment = self.find_virtual_environment_activation_file(directory, site)
+        activation_environment = self.get_activation_environment(site, venv_config, directory)
 
         if activation_environment is None:
             self.line(f"<error>No virtual environment detected, not starting site {site}.</error>")
@@ -60,13 +55,20 @@ class StartCommand(CLICommand):
         if driver is None:
             return
         command = f"cd {directory}"
-        if not self.in_virtualenv():
+        if activation_environment:
             command += f" && source {activation_environment}"
         socket_path = os.path.join(socket_directory, site)
         subprocess.check_call([sys.executable, "-m", "pip", "install", "uwsgi"])
         command += f" && set -m; nohup uwsgi --socket {socket_path}.{tld}.sock --wsgi-file {driver.wsgi_path(directory)} --py-autoreload=1 &> /dev/null &"
         subprocess.run(command, shell=True, close_fds=True,
                         env={'PYTHONPATH': f'{directory}'})
+
+    def get_activation_environment(self, site, venv_config, directory):
+        if self.in_virtualenv():
+            return False
+        if site in venv_config:
+            return os.path.join(venv_config[site], 'bin/activate')
+        return self.find_virtual_environment_activation_file(directory, site)
 
     def get_registered_directories(self):
         directories = []
