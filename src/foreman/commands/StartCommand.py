@@ -57,6 +57,8 @@ class StartCommand(CLICommand):
             self.line("<fg=magenta;options=bold>    foreman register /path/to/venv</>")
             return
         driver = self.make(directory)
+        if driver is None:
+            return
         command = f"cd {directory}"
         if not self.in_virtualenv():
             command += f" && source {activation_environment}"
@@ -89,8 +91,8 @@ class StartCommand(CLICommand):
                 self.info(f'Using driver: {key.capitalize()}')
                 return selected_driver
 
-        raise ValueError("Could not detect a driver for this project")
-        # return self.drivers[driver]()
+        self.line(f"<error>Could not detect a driver for this project</error>")
+        return None
 
     def in_virtualenv(self):
         return os.getenv('VIRTUAL_ENV') is not None
