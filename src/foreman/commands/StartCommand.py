@@ -1,5 +1,6 @@
 import glob
 import os
+import sys
 import subprocess
 from pathlib import Path
 
@@ -43,18 +44,31 @@ class StartCommand(CLICommand):
         venv_config = configuration.get('venvs')
         tld = configuration.get('tld')
         socket_directory = configuration.get('socket_directory')
-        if site in venv_config:
-            activation_environment = os.path.join(venv_config[site], 'bin/activate')
-        else:
-            activation_environment = self.find_virtual_environment_activation_file(directory, site)
+        activation_environment = self.get_activation_environment(site, venv_config, directory)
 
+        if activation_environment is None:
+            self.line(f"<error>No virtual environment detected, not starting site {site}.</error>")
+            self.line("<error>Please register your venv by running:</error>")
+            self.line("<fg=magenta;options=bold>    foreman register /path/to/venv</>")
+            return
         driver = self.make(directory)
+        if driver is None:
+            return
         command = f"cd {directory}"
-        command += f" && source {activation_environment}"
+        if activation_environment:
+            command += f" && source {activation_environment}"
         socket_path = os.path.join(socket_directory, site)
-        command += f" && pip install uwsgi && set -m; nohup uwsgi --socket {socket_path}.{tld}.sock --wsgi-file {driver.wsgi_path(directory)} --py-autoreload=1 &> /dev/null &"
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "uwsgi"])
+        command += f" && set -m; nohup uwsgi --socket {socket_path}.{tld}.sock --wsgi-file {driver.wsgi_path(directory)} --py-autoreload=1 &> /dev/null &"
         subprocess.run(command, shell=True, close_fds=True,
                         env={'PYTHONPATH': f'{directory}'})
+
+    def get_activation_environment(self, site, venv_config, directory):
+        if self.in_virtualenv():
+            return False
+        if site in venv_config:
+            return os.path.join(venv_config[site], 'bin/activate')
+        return self.find_virtual_environment_activation_file(directory, site)
 
     def get_registered_directories(self):
         directories = []
@@ -63,7 +77,15 @@ class StartCommand(CLICommand):
         return directories
 
     def find_virtual_environment_activation_file(self, directory, site):
-        return os.path.join(directory, 'venv/bin/activate')
+        for location in Configuration().get('venv_locations'):
+            if "/" in location:
+                project = os.path.basename(directory)
+                venv = os.path.join(location, project, 'bin/activate')
+            else:
+                venv = os.path.join(directory, location, 'bin/activate')
+            if os.path.exists(venv):
+                return venv
+        return None
 
     def make(self, directory):
         for key, available_driver in self.drivers.items():
@@ -71,6 +93,9 @@ class StartCommand(CLICommand):
             if selected_driver.detect(directory):
                 self.info(f'Using driver: {key.capitalize()}')
                 return selected_driver
-        
-        raise ValueError("Could not detect a driver for this project")
-        # return self.drivers[driver]()
+
+        self.line(f"<error>Could not detect a driver for this project</error>")
+        return None
+
+    def in_virtualenv(self):
+        return os.getenv('VIRTUAL_ENV') is not None
