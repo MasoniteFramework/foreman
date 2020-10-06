@@ -1,23 +1,28 @@
 from cleo import Command as CLICommand
 
 from ..services.Brew import Brew
+from ..services.Configuration import Configuration
 from ..services.Dnsmasq import Dnsmasq
 from ..services.Nginx import Nginx
 
 
 class TldCommand(CLICommand):
     """
-    Changes the TLD to serve on
+    Changes the TLD to serve on (or displays current selected TLD if no argument provided)
 
     tld
-        {tld : The TLD to change to}
+        {tld? : The TLD to change to}
     """
 
     def handle(self) -> None:
         dnsmasq = Dnsmasq()
         nginx = Nginx()
         brew = Brew()
-        tld = str(self.argument("tld"))
+        configuration = Configuration()
+        tld = self.argument("tld")
+        if tld is None:
+            self.info(configuration.get("tld"))
+            return
 
         self.info("Killing all applications ..")
         self.call("kill")
