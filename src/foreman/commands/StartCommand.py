@@ -60,7 +60,13 @@ class StartCommand(CLICommand):
         if activation_environment:
             command += f" && source {activation_environment}"
         socket_path = os.path.join(socket_directory, site)
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "uwsgi"])
+        command_install = f"{command} && pip install uwsgi"
+        subprocess.run(
+            command_install,
+            shell=True,
+            close_fds=True,
+            env={"PYTHONPATH": f"{directory}"},
+        )
         command += f" && set -m; nohup uwsgi --socket {socket_path}.{tld}.sock --wsgi-file {driver.wsgi_path(directory)} --py-autoreload=1 &> /dev/null &"
         subprocess.run(
             command, shell=True, close_fds=True, env={"PYTHONPATH": f"{directory}"}
