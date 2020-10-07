@@ -3,6 +3,7 @@ venv
 dist
 build
 **/*.egg-info
+.tox
 
 # IDEs
 .vscode/
