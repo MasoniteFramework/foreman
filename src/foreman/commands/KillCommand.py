@@ -31,7 +31,7 @@ class KillCommand(CLICommand):
         tld = configuration.get("tld")
         socket_directory = configuration.get("socket_directory")
         subprocess.run(
-            f"rm {os.path.join(socket_directory, app)}.{tld}.sock", shell=True
+            f"rm {os.path.join(socket_directory, app)}.{tld}.sock", shell=True, check=True
         )
         self.info("App stopped")
 

@@ -33,5 +33,5 @@ class VenvCommand(CLICommand):
             self.info("Registered")
         else:
             self.info(
-                f"Could not detect virtualenv path. Ensure you are inside your virtualenv."
+                "Could not detect virtualenv path. Ensure you are inside your virtualenv."
             )
