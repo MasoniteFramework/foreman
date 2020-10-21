@@ -7,6 +7,7 @@ from cleo import Command as CLICommand
 from ..drivers.MasoniteDriver import MasoniteDriver
 from ..services.Configuration import Configuration
 
+
 class ConfigCommand(CLICommand):
     """
     Sets or gets a config
@@ -16,9 +17,9 @@ class ConfigCommand(CLICommand):
         {value? : The value of the config to set}
     """
 
-    def handle(self):   
+    def handle(self):
         configuration = Configuration()
-        if self.argument('value'):
-            configuration.set(self.argument('key'), self.argument('value'))
+        if self.argument("value"):
+            configuration.set(self.argument("key"), self.argument("value"))
 
-        return self.info(configuration.get(self.argument('key')))  
+        return self.info(configuration.get(self.argument("key")))

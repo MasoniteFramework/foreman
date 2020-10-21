@@ -30,5 +30,5 @@ application.add(KillCommand())
 application.add(TldCommand())
 application.add(ConfigCommand())
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     application.run()
