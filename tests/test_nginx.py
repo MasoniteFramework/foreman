@@ -34,7 +34,7 @@ class Test_Nginx(TestCase):
         self.assertTrue(os.path.exists("/usr/local/etc/nginx/servers/foreman.conf"))
 
 
-def subprocess_check_output(command, shell=False):
+def subprocess_check_output(command, shell=False, check=False):
     if command.startswith("nginx"):
         return "/usr/local/etc/nginx/nginx.conf".encode()
     return "".encode()

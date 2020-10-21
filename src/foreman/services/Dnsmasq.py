@@ -27,7 +27,7 @@ class Dnsmasq:
     def remove_old_dns(self) -> None:
         oldtld = str(self.configuration.get("tld"))
         if oldtld != "":
-            subprocess.run(f"sudo rm -f /etc/resolver/{oldtld}", shell=True)
+            subprocess.run(f"sudo rm -f /etc/resolver/{oldtld}", shell=True, check=True)
 
     def update_custom_dns(self, tld: str) -> None:
         self.remove_old_dns()
@@ -36,6 +36,7 @@ class Dnsmasq:
         subprocess.run(
             f'echo "nameserver 127.0.0.1"|sudo tee /etc/resolver/{tld} > /dev/null',
             shell=True,
+            check=True,
         )
         dnsmasq_config = os.path.join(
             self.configuration.get_config_path(), "dnsmasq.conf"

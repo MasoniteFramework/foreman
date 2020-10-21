@@ -63,12 +63,17 @@ class StartCommand(CLICommand):
         subprocess.run(
             command_install,
             shell=True,
+            check=True,
             close_fds=True,
             env={"PYTHONPATH": f"{directory}"},
         )
         command += f" && set -m; nohup uwsgi --socket {socket_path}.{tld}.sock --wsgi-file {driver.wsgi_path(directory)} --py-autoreload=1 &> /dev/null &"
         subprocess.run(
-            command, shell=True, close_fds=True, env={"PYTHONPATH": f"{directory}"}
+            command,
+            shell=True,
+            check=True,
+            close_fds=True,
+            env={"PYTHONPATH": f"{directory}"},
         )
 
     def get_activation_environment(self, site, venv_config, directory):

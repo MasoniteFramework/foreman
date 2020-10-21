@@ -55,7 +55,7 @@ class Test_Dnsmasq(TestCase):
         Dnsmasq().force_link()
         self.assertTrue(os.path.exists("/usr/local/etc/dnsmasq.d/dnsmasq-foreman.conf"))
 
-def subprocess_run(command, shell=False):
+def subprocess_run(command, shell=False, check=False):
     if command.startswith("sudo"):
         os.remove('/etc/resolver/test')
     if  command.startswith("echo"):
