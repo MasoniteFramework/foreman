@@ -9,7 +9,8 @@ class Configuration:
             os.mkdir(self.get_config_path())
             self.save({})
 
-    def get_config_path(self):
+    @staticmethod
+    def get_config_path():
         return os.path.join(Path.home(), ".foreman")
 
     def get(self, key, default=""):

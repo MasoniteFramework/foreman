@@ -13,13 +13,14 @@ class InstallCommand(CLICommand):
     install
     """
 
+    configuration = Configuration()
+    brew = Brew()
+
     def handle(self) -> None:
         self.info("Creating foreman config directory .. ")
-        self.configuration = Configuration()
         self.configuration.init()
         self.configuration.set("venv_locations", ["venv", "env"])
 
-        self.brew = Brew()
         self.info("Updating Brew ..")
         self.brew.update()
 

@@ -5,13 +5,14 @@ from ..services.Configuration import Configuration
 
 
 class Dnsmasq:
-    def __init__(self):
-        self.configuration = Configuration()
+    configuration = Configuration()
 
-    def get_custom_config_dir(self) -> str:
+    @staticmethod
+    def get_custom_config_dir() -> str:
         return "/usr/local/etc/dnsmasq.d/"
 
-    def enable_custom_configs(self) -> None:
+    @staticmethod
+    def enable_custom_configs() -> None:
         """ Ensure dnsmasq is configured to allow extra config files """
         dnsmasq_config = "/usr/local/etc/dnsmasq.conf"
         with open(dnsmasq_config) as f:

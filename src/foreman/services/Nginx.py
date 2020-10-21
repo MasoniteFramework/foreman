@@ -6,13 +6,13 @@ from ..services.Configuration import Configuration
 
 
 class Nginx:
-    def __init__(self):
-        self.configuration = Configuration()
+    configuration = Configuration()
 
-    def get_config_path(self):
+    @staticmethod
+    def get_config_path():
         nginx_conf = (
             subprocess.check_output(
-                "nginx -V 2>&1 | grep -o '\-\-conf-path=\(.*conf\)' | cut -d '=' -f2",
+                "nginx -V 2>&1 | grep -o '\\-\\-conf-path=\\(.*conf\\)' | cut -d '=' -f2",
                 shell=True,
             )
             .decode("utf-8")
