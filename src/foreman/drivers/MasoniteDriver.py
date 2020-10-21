@@ -1,12 +1,10 @@
 import os
 
-class MasoniteDriver:
 
+class MasoniteDriver:
     def wsgi_path(self, directory):
-        
-        return "wsgi.py"   
-    
+
+        return "wsgi.py"
+
     def detect(self, directory):
-        return os.path.exists(
-            os.path.join(directory, 'bootstrap')
-        )
+        return os.path.exists(os.path.join(directory, "bootstrap"))
