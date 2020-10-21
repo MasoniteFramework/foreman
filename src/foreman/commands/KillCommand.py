@@ -30,11 +30,7 @@ class KillCommand(CLICommand):
         configuration = Configuration()
         tld = configuration.get("tld")
         socket_directory = configuration.get("socket_directory")
-        subprocess.run(
-            f"rm {os.path.join(socket_directory, app)}.{tld}.sock",
-            shell=True,
-            check=True,
-        )
+        subprocess.run(["rm", f"{os.path.join(socket_directory, app)}.{tld}.sock"])
         self.info("App stopped")
 
     def get_registered_directories(self):

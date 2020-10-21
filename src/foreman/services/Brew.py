@@ -4,11 +4,11 @@ import subprocess
 class Brew:
     @staticmethod
     def install(package: str) -> None:
-        subprocess.run(f"/usr/local/bin/brew install {package}", shell=True, check=True)
+        subprocess.run(["/usr/local/bin/brew", "install", package], check=True)
 
     @staticmethod
     def update() -> None:
-        subprocess.run("/usr/local/bin/brew update", shell=True, check=True)
+        subprocess.run(["/usr/local/bin/brew", "update"], check=True)
 
     def stop_service(self, service: str, use_sudo=False) -> None:
         self.run_command(service, "stop", use_sudo)
@@ -21,7 +21,7 @@ class Brew:
 
     @classmethod
     def run_command(cls, service: str, action: str, use_sudo=False):
-        command = f"/usr/local/bin/brew services {action} {service}"
+        command = ["/usr/local/bin/brew", "services", action, service]
         if use_sudo:
-            command = f"sudo {command}"
-        subprocess.run(command, shell=True, check=True)
+            command = ["sudo"] + command
+        subprocess.run(command, check=True)
