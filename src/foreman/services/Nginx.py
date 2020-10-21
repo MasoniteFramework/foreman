@@ -12,7 +12,7 @@ class Nginx:
     def get_config_path():
         nginx_conf = (
             subprocess.check_output(
-                "nginx -V 2>&1 | grep -o '\\-\\-conf-path=\\(.*conf\\)' | cut -d '=' -f2",
+                "/usr/local/bin/nginx -V 2>&1 | grep -o '\\-\\-conf-path=\\(.*conf\\)' | cut -d '=' -f2",
                 shell=True,
             )
             .decode("utf-8")

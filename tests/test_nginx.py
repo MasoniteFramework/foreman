@@ -35,6 +35,6 @@ class Test_Nginx(TestCase):
 
 
 def subprocess_check_output(command, shell=False, check=False):
-    if command.startswith("nginx"):
+    if command.startswith("/usr/local/bin/nginx"):
         return "/usr/local/etc/nginx/nginx.conf".encode()
     return "".encode()
