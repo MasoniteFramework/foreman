@@ -26,11 +26,10 @@ class StartCommand(CLICommand):
             site = os.getcwd().split("/")[-1]
             self.start_directory(os.getcwd(), site)
             return
-        else:
-            self.info("Ensuring All Applications Are Started ..")
-            for directory in self.get_registered_directories():
-                site = directory.split("/")[-2]
-                self.start_directory(directory, site)
+        self.info("Ensuring All Applications Are Started ..")
+        for directory in self.get_registered_directories():
+            site = directory.split("/")[-2]
+            self.start_directory(directory, site)
 
     @staticmethod
     def get_home_path():
