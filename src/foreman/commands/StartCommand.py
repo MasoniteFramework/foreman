@@ -61,7 +61,7 @@ class StartCommand(CLICommand):
         command_install = f"{command} && pip install uwsgi"
         subprocess.run(
             command_install,
-            shell=True,
+            shell=True,  # skipcq: BAN-B602
             check=True,
             close_fds=True,
             env={"PYTHONPATH": f"{directory}"},
@@ -69,7 +69,7 @@ class StartCommand(CLICommand):
         command += f" && set -m; nohup uwsgi --socket {socket_path}.{tld}.sock --wsgi-file {driver.wsgi_path(directory)} --py-autoreload=1 &> /dev/null &"
         subprocess.run(
             command,
-            shell=True,
+            shell=True,  # skipcq: BAN-B602
             check=True,
             close_fds=True,
             env={"PYTHONPATH": f"{directory}"},

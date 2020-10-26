@@ -1,6 +1,5 @@
 import glob
 import os
-import subprocess
 
 from cleo import Command as CLICommand
 from ..services.Configuration import Configuration
@@ -28,7 +27,7 @@ class KillCommand(CLICommand):
         configuration = Configuration()
         tld = configuration.get("tld")
         socket_directory = configuration.get("socket_directory")
-        subprocess.run(["rm", f"{os.path.join(socket_directory, app)}.{tld}.sock"])
+        os.unlink(f"{os.path.join(socket_directory, app)}.{tld}.sock")
         self.info("App stopped")
 
     def get_registered_directories(self):

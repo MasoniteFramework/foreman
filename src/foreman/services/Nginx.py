@@ -1,5 +1,5 @@
 import os
-import subprocess
+import subprocess  # skipcq: BAN-B404
 
 from ..settings import PATHS
 from ..services.Configuration import Configuration
@@ -13,7 +13,7 @@ class Nginx:
         nginx_conf = (
             subprocess.check_output(
                 "/usr/local/bin/nginx -V 2>&1 | grep -o '\\-\\-conf-path=\\(.*conf\\)' | cut -d '=' -f2",
-                shell=True,
+                shell=True,  # skipcq: BAN-B602
             )
             .decode("utf-8")
             .strip()
