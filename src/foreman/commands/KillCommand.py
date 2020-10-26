@@ -27,7 +27,9 @@ class KillCommand(CLICommand):
         configuration = Configuration()
         tld = configuration.get("tld")
         socket_directory = configuration.get("socket_directory")
-        os.unlink(f"{os.path.join(socket_directory, app)}.{tld}.sock")
+        pipe_file = f"{os.path.join(socket_directory, app)}.{tld}.sock"
+        if os.path.exists(pipe_file):
+            os.unlink(pipe_file)
         self.info("App stopped")
 
     def get_registered_directories(self):
