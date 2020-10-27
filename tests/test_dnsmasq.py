@@ -9,6 +9,7 @@ from foreman.services.Dnsmasq import Dnsmasq
 
 class Test_Dnsmasq(TestCase):
     package_path = os.path.dirname(os.path.dirname(__file__))
+
     def setUp(self):
         self.setUpPyfakefs()
         self.fs.add_real_directory(self.package_path)
@@ -22,11 +23,13 @@ class Test_Dnsmasq(TestCase):
 
     def test_enable_custom_configs(self):
         dnsmasq_config = "/usr/local/etc/dnsmasq.conf"
-        self.fs.create_file(dnsmasq_config, contents="""
+        self.fs.create_file(
+            dnsmasq_config,
+            contents="""
             some content
             #conf-dir=/usr/local/etc/dnsmasq.d/,*.conf
             #some other content
-            """
+            """,
         )
         Dnsmasq().enable_custom_configs()
         with open(dnsmasq_config) as f:
@@ -44,7 +47,7 @@ class Test_Dnsmasq(TestCase):
         self.fs.create_file("/etc/resolver/test")
         self.fs.create_file(f"{self.home}/.foreman/config.yml", contents="tld: test")
         subprocess.run = subprocess_run
-        Dnsmasq().update_custom_dns('test2')
+        Dnsmasq().update_custom_dns("test2")
         self.assertFalse(os.path.exists("/etc/resolver/test"))
         self.assertTrue(os.path.exists("/etc/resolver/test2"))
         with open(f"{self.home}/.foreman/dnsmasq.conf") as f:
@@ -56,10 +59,11 @@ class Test_Dnsmasq(TestCase):
         Dnsmasq().force_link()
         self.assertTrue(os.path.exists("/usr/local/etc/dnsmasq.d/dnsmasq-foreman.conf"))
 
+
 def subprocess_run(command, shell=False, check=False):
     if command.startswith("sudo"):
-        os.remove('/etc/resolver/test')
-    if  command.startswith("echo"):
-        with open('/etc/resolver/test2', "w+") as f:
-            f.write('nameserver 127.0.0.1')
+        os.remove("/etc/resolver/test")
+    if command.startswith("echo"):
+        with open("/etc/resolver/test2", "w+") as f:
+            f.write("nameserver 127.0.0.1")
     return "".encode()

@@ -107,7 +107,7 @@ class StartCommand(CLICommand):
                 self.info(f"Using driver: {key.capitalize()}")
                 return selected_driver
 
-        self.line(f"<error>Could not detect a driver for this project</error>")
+        self.line("<error>Could not detect a driver for this project</error>")
         return None
 
     @staticmethod

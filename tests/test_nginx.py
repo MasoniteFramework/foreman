@@ -9,6 +9,7 @@ from foreman.services.Nginx import Nginx
 
 class Test_Nginx(TestCase):
     package_path = os.path.dirname(os.path.dirname(__file__))
+
     def setUp(self):
         self.setUpPyfakefs()
         self.fs.add_real_directory(self.package_path)
@@ -22,7 +23,7 @@ class Test_Nginx(TestCase):
         home = Path.home()
         os.makedirs(f"{home}/.foreman", exist_ok=True)
         self.assertFalse(os.path.exists(f"{home}/.foreman/nginx.conf"))
-        Nginx().update_custom_config('test')
+        Nginx().update_custom_config("test")
         self.assertTrue(os.path.exists(f"{home}/.foreman/nginx.conf"))
 
     def test_force_link(self):

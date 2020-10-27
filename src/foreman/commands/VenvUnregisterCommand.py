@@ -29,4 +29,4 @@ class VenvUnregisterCommand(CLICommand):
             configuration.remove("venvs", site)
             self.info("Registered")
         else:
-            self.info(f"Could not detect virtualenv path")
+            self.info("Could not detect virtualenv path")
