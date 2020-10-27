@@ -1,6 +1,7 @@
 import os
 import subprocess
 from pathlib import Path
+
 from pyfakefs.fake_filesystem_unittest import TestCase
 
 from foreman.services.Nginx import Nginx

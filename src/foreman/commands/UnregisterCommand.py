@@ -1,6 +1,7 @@
 import os
 
 from cleo import Command as CLICommand
+
 from ..services.Configuration import Configuration
 
 

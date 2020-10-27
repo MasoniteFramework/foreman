@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 from cleo import Application
-from .commands.StartCommand import StartCommand
+
+from .commands.ConfigCommand import ConfigCommand
+from .commands.InstallCommand import InstallCommand
+from .commands.KillCommand import KillCommand
 from .commands.RegisterCommand import RegisterCommand
+from .commands.StartCommand import StartCommand
+from .commands.TldCommand import TldCommand
 from .commands.UnregisterCommand import UnregisterCommand
 from .commands.VenvCommand import VenvCommand
 from .commands.VenvUnregisterCommand import VenvUnregisterCommand
-from .commands.InstallCommand import InstallCommand
-from .commands.KillCommand import KillCommand
-from .commands.TldCommand import TldCommand
-from .commands.ConfigCommand import ConfigCommand
-
 
 application = Application(name="Masonite Foreman")
 application.add(StartCommand())
