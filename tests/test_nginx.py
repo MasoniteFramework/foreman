@@ -1,4 +1,5 @@
 import os
+import site
 import subprocess
 from pathlib import Path
 
@@ -12,7 +13,8 @@ class Test_Nginx(TestCase):
 
     def setUp(self):
         self.setUpPyfakefs()
-        self.fs.add_real_directory(self.package_path)
+        for packages_dir in site.getsitepackages():
+            self.fs.add_real_directory(packages_dir)
 
     def test_get_config_path(self):
         expected_config_path = "/usr/local/etc/nginx"
