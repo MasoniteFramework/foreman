@@ -2,6 +2,12 @@
 
 **Still under development. This project currently only works with Macs. Windows and Linux support coming soon.**
 
+![Build](https://github.com/MasoniteFramework/foreman/workflows/Test%20Application/badge.svg?branch=master)
+<img src="https://img.shields.io/badge/python-3.6+-blue.svg" alt="Python Version">
+<img src="http://pepy.tech/badge/masonite-foreman?1" alt="Downloads">
+<img src="https://img.shields.io/github/license/MasoniteFramework/foreman.svg" alt="License">
+<img src="https://coveralls.io/repos/github/MasoniteFramework/foreman/badge.svg?branch=master#" alt="Coverage">
+
 ## Requirements:
 
 * Python 3.6 +

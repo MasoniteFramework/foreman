@@ -2,7 +2,8 @@ from setuptools import setup
 
 setup(
     name="masonite-foreman",
-    version='0.0.2',
+    description="A way to serve all your python applications without needing to serve them",
+    version='0.1.0',
     # The project's main homepage.
     url='https://github.com/masoniteframework/foreman',
     py_modules=['foreman'],
