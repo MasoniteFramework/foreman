@@ -4,6 +4,7 @@ isort
 pytest
 pytest-cov
 pytest-xdist
+coveralls
 PyYAML==5.3.1
 cleo>=0.8.0,<0.9
 pyfakefs
