@@ -15,13 +15,13 @@ class VenvUnregisterCommand(CLICommand):
 
     def handle(self):
         if self.argument("directory"):
-            directory = self.argument("directory")
+            directory = str(self.argument("directory"))
         else:
             directory = os.getcwd()
 
         configuration = Configuration()
 
-        site = os.getcwd().split("/")[-1]
+        site = directory.split("/")[-1]
 
         if "VIRTUAL_ENV" in os.environ:
             virtual = os.environ["VIRTUAL_ENV"]
