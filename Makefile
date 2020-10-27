@@ -1,9 +1,11 @@
+PYTHON_VERSION=`python -V|cut -d ' ' -f 2|cut -d . -f 1,2`
+
+
 init:
 	pip install --upgrade pip
 	pip install -r requirements.txt
 	pip install .
 test:
-	PYTHON_VERSION=`python -V|cut -d ' ' -f 2|cut -d . -f 1,2`
 	python -m pytest tests --doctest-modules --junitxml=junit/test-results-${PYTHON_VERSION}.xml
 ci:
 	make test
