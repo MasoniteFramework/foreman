@@ -4,15 +4,15 @@ import subprocess  # skipcq: BAN-B404
 class Brew:
     @staticmethod
     def install(package: str) -> None:
-        subprocess.run(
+        subprocess.run(  # skipcq: BAN-B603
             ["/usr/local/bin/brew", "install", package], check=True
-        )  # skipcq: BAN-B603
+        )
 
     @staticmethod
     def update() -> None:
-        subprocess.run(
+        subprocess.run(  # skipcq: BAN-B603
             ["/usr/local/bin/brew", "update"], check=True
-        )  # skipcq: BAN-B603
+        )
 
     def stop_service(self, service: str, use_sudo=False) -> None:
         self.run_command(service, "stop", use_sudo)
