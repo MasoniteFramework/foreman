@@ -9,3 +9,7 @@ build
 .vscode/
 .idea/
 
+# Coverage
+htmlcov/*
+coverage.xml
+.coverage
