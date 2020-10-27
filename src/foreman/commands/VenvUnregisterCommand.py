@@ -1,6 +1,7 @@
 import os
 
 from cleo import Command as CLICommand
+
 from ..services.Configuration import Configuration
 
 
@@ -14,13 +15,13 @@ class VenvUnregisterCommand(CLICommand):
 
     def handle(self):
         if self.argument("directory"):
-            directory = self.argument("directory")
+            directory = str(self.argument("directory"))
         else:
             directory = os.getcwd()
 
         configuration = Configuration()
 
-        site = os.getcwd().split("/")[-1]
+        site = directory.split("/")[-1]
 
         if "VIRTUAL_ENV" in os.environ:
             virtual = os.environ["VIRTUAL_ENV"]
@@ -28,4 +29,4 @@ class VenvUnregisterCommand(CLICommand):
             configuration.remove("venvs", site)
             self.info("Registered")
         else:
-            self.info(f"Could not detect virtualenv path")
+            self.info("Could not detect virtualenv path")

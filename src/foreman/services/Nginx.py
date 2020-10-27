@@ -1,8 +1,8 @@
 import os
 import subprocess  # skipcq: BAN-B404
 
-from ..settings import PATHS
 from ..services.Configuration import Configuration
+from ..settings import PATHS
 
 
 class Nginx:

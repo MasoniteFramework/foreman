@@ -1,8 +1,8 @@
 from cleo import Command as CLICommand
 
 from ..services.Brew import Brew
-from ..services.Dnsmasq import Dnsmasq
 from ..services.Configuration import Configuration
+from ..services.Dnsmasq import Dnsmasq
 from ..services.Nginx import Nginx
 
 
