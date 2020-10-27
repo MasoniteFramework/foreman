@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: macOS-latest
+    runs-on: macos-latest
 
     strategy:
       matrix:
@@ -22,8 +22,15 @@ jobs:
       - name: Test with pytest
         run: |
           make test
+      - name: Upload pytest test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: pytest-results-${{ matrix.python-version }}
+          path: junit/test-results-${{ matrix.python-version }}.xml
+        # Use always() to always run this step to publish test results when there are test failures
+        if: ${{ always() }}
   lint:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     name: Lint
     steps:
       - uses: actions/checkout@v1
@@ -36,3 +43,14 @@ jobs:
           pip install flake8==3.7.9
       - name: Lint
         run: make lint
+  coverage:
+    runs-on: macos-latest
+    name: Coverage
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python 3.6
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.6
+      - name: Coverage
+        run: make coverage

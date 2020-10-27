@@ -3,7 +3,8 @@ init:
 	pip install -r requirements.txt
 	pip install .
 test:
-	python -m pytest tests
+	PYTHON_VERSION=`python -V|cut -d ' ' -f 2|cut -d . -f 1,2`
+	python -m pytest tests --doctest-modules --junitxml=junit/test-results-${PYTHON_VERSION}.xml
 ci:
 	make test
 lint:
