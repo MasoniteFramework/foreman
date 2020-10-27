@@ -4,6 +4,15 @@ import os
 
 
 class Configuration:
+    def init(self):
+        if not os.path.exists(self.get_config_path()):
+            os.mkdir(self.get_config_path())
+            self.save({})
+
+    @staticmethod
+    def get_config_path():
+        return os.path.join(Path.home(), ".foreman")
+
     def get(self, key, default=""):
         return self.config().get(key, default)
 
@@ -46,17 +55,12 @@ class Configuration:
         self.save(config)
 
     def save(self, dictionary):
-        with open(os.path.join(self.get_home_path(), ".foreman/config.yml"), "w") as f:
+        with open(os.path.join(self.get_config_path(), "config.yml"), "w") as f:
             yaml.dump(dictionary, f)
 
     def config(self):
-        with open(
-            os.path.join(self.get_home_path(), ".foreman/config.yml"), "r"
-        ) as stream:
+        with open(os.path.join(self.get_config_path(), "config.yml"), "r") as stream:
             try:
                 return yaml.safe_load(stream) or {}
             except yaml.YAMLError as exc:
                 print(exc)
-
-    def get_home_path(self):
-        return str(Path.home())

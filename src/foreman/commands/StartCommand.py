@@ -1,6 +1,5 @@
 import glob
 import os
-import sys
 import subprocess
 from pathlib import Path
 
@@ -19,6 +18,7 @@ class StartCommand(CLICommand):
     """
 
     drivers = {"masonite": MasoniteDriver, "django": DjangoDriver}
+    configuration = Configuration()
 
     def handle(self):
         # Configuration().config()
@@ -26,22 +26,20 @@ class StartCommand(CLICommand):
             site = os.getcwd().split("/")[-1]
             self.start_directory(os.getcwd(), site)
             return
-        else:
-            self.info("Ensuring All Applications Are Started ..")
-            configuration = Configuration()
-            for directory in self.get_registered_directories():
-                site = directory.split("/")[-2]
-                self.start_directory(directory, site)
+        self.info("Ensuring All Applications Are Started ..")
+        for directory in self.get_registered_directories():
+            site = directory.split("/")[-2]
+            self.start_directory(directory, site)
 
-    def get_home_path(self):
+    @staticmethod
+    def get_home_path():
         return str(Path.home())
 
     def start_directory(self, directory, site):
-        configuration = Configuration()
         self.info(f"Starting {site}..")
-        venv_config = configuration.get("venvs")
-        tld = configuration.get("tld")
-        socket_directory = configuration.get("socket_directory")
+        venv_config = self.configuration.get("venvs")
+        tld = self.configuration.get("tld")
+        socket_directory = self.configuration.get("socket_directory")
         activation_environment = self.get_activation_environment(
             site, venv_config, directory
         )
@@ -60,10 +58,21 @@ class StartCommand(CLICommand):
         if activation_environment:
             command += f" && source {activation_environment}"
         socket_path = os.path.join(socket_directory, site)
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "uwsgi"])
+        command_install = f"{command} && pip install uwsgi"
+        subprocess.run(
+            command_install,
+            shell=True,  # skipcq: BAN-B602
+            check=True,
+            close_fds=True,
+            env={"PYTHONPATH": f"{directory}"},
+        )
         command += f" && set -m; nohup uwsgi --socket {socket_path}.{tld}.sock --wsgi-file {driver.wsgi_path(directory)} --py-autoreload=1 &> /dev/null &"
         subprocess.run(
-            command, shell=True, close_fds=True, env={"PYTHONPATH": f"{directory}"}
+            command,
+            shell=True,  # skipcq: BAN-B602
+            check=True,
+            close_fds=True,
+            env={"PYTHONPATH": f"{directory}"},
         )
 
     def get_activation_environment(self, site, venv_config, directory):
@@ -71,16 +80,16 @@ class StartCommand(CLICommand):
             return False
         if site in venv_config:
             return os.path.join(venv_config[site], "bin/activate")
-        return self.find_virtual_environment_activation_file(directory, site)
+        return self.find_virtual_environment_activation_file(directory)
 
     def get_registered_directories(self):
         directories = []
-        for directory in Configuration().get("directories", []):
+        for directory in self.configuration.get("directories", []):
             directories += glob.glob(os.path.join(directory, "*/"))
         return directories
 
-    def find_virtual_environment_activation_file(self, directory, site):
-        for location in Configuration().get("venv_locations"):
+    def find_virtual_environment_activation_file(self, directory):
+        for location in self.configuration.get("venv_locations"):
             if "/" in location:
                 project = os.path.basename(directory)
                 venv = os.path.join(location, project, "bin/activate")
@@ -100,5 +109,6 @@ class StartCommand(CLICommand):
         self.line(f"<error>Could not detect a driver for this project</error>")
         return None
 
-    def in_virtualenv(self):
+    @staticmethod
+    def in_virtualenv():
         return os.getenv("VIRTUAL_ENV") is not None

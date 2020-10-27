@@ -1,51 +1,41 @@
-import glob
-import os
-import subprocess
-from pathlib import Path
-
 from cleo import Command as CLICommand
-from ..drivers.MasoniteDriver import MasoniteDriver
+
+from ..services.Brew import Brew
 from ..services.Configuration import Configuration
-from ..settings import PATHS
+from ..services.Dnsmasq import Dnsmasq
+from ..services.Nginx import Nginx
 
 
 class TldCommand(CLICommand):
     """
-    Changes the TLD to serve on
+    Changes the TLD to serve on (or displays current selected TLD if no argument provided)
 
     tld
-        {tld : The TLD to change to}
+        {tld? : The TLD to change to}
     """
 
-    def handle(self):
+    def handle(self) -> None:
+        dnsmasq = Dnsmasq()
+        nginx = Nginx()
+        brew = Brew()
         configuration = Configuration()
         tld = self.argument("tld")
-
-        # Stop NGINX
-        self.info("Stopping NGINX ..")
-        subprocess.run("sudo nginx -s stop", shell=True)
+        if tld is None:
+            self.info(configuration.get("tld"))
+            return
 
         self.info("Killing all applications ..")
         self.call("kill")
 
         self.info("Setting TLD ..")
-        configuration.set("tld", tld)
+        dnsmasq.update_custom_dns(tld)
+        nginx.update_custom_config(tld)
 
-        # Add the foreman config
-        with open(os.path.join(PATHS["stubs"], "foreman.conf")) as f:
-            output = f.read()
-
-        output = output.replace("TLD", tld)
-
-        with open(os.path.join(self.get_home_path(), ".foreman/nginx.conf"), "w+") as f:
-            f.write(output)
+        self.info("Restarting dnsmasq ..")
+        brew.restart_service("dnsmasq", use_sudo=True)
 
         self.info("Restarting nginx ..")
-        subprocess.run("sudo nginx", shell=True)
-        subprocess.run("sudo nginx -s reload", shell=True)
+        brew.restart_service("nginx")
 
         self.info("Starting applications under new TLD ..")
         self.call("start")
-
-    def get_home_path(self):
-        return str(Path.home())

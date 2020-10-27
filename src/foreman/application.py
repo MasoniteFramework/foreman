@@ -1,13 +1,4 @@
 #!/usr/bin/env python
-# import subprocess, os, glob
-# from pathlib import Path
-# home = str(Path.home())
-
-import glob
-import os
-import subprocess
-from pathlib import Path
-
 from cleo import Application
 from .commands.StartCommand import StartCommand
 from .commands.RegisterCommand import RegisterCommand
@@ -25,6 +16,7 @@ application.add(StartCommand())
 application.add(RegisterCommand())
 application.add(UnregisterCommand())
 application.add(VenvCommand())
+application.add(VenvUnregisterCommand())
 application.add(InstallCommand())
 application.add(KillCommand())
 application.add(TldCommand())

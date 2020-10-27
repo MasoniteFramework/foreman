@@ -1,10 +1,7 @@
 import glob
 import os
-import subprocess
-from pathlib import Path
 
 from cleo import Command as CLICommand
-from ..drivers.MasoniteDriver import MasoniteDriver
 from ..services.Configuration import Configuration
 
 
@@ -30,9 +27,9 @@ class KillCommand(CLICommand):
         configuration = Configuration()
         tld = configuration.get("tld")
         socket_directory = configuration.get("socket_directory")
-        subprocess.run(
-            f"rm {os.path.join(socket_directory, app)}.{tld}.sock", shell=True, check=True
-        )
+        pipe_file = f"{os.path.join(socket_directory, app)}.{tld}.sock"
+        if os.path.exists(pipe_file):
+            os.unlink(pipe_file)
         self.info("App stopped")
 
     def get_registered_directories(self):
