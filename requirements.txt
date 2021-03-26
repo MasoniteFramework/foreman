@@ -4,7 +4,7 @@ isort
 pytest
 pytest-cov
 pytest-xdist
-PyYAML==5.3.1
+PyYAML==5.4
 cleo>=0.8.0,<0.9
 pyfakefs
 tox
